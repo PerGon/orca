@@ -27,6 +27,7 @@ import com.netflix.spinnaker.orca.pipelinetemplate.v1schema.model.StageDefinitio
 import com.netflix.spinnaker.orca.pipelinetemplate.v1schema.render.JinjaRenderer
 import com.netflix.spinnaker.orca.pipelinetemplate.v1schema.render.Renderer
 import com.netflix.spinnaker.orca.pipelinetemplate.v1schema.render.YamlRenderedValueConverter
+import org.codehaus.jettison.json.JSONObject
 import org.unitils.reflectionassert.ReflectionComparatorMode
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Specification
@@ -202,6 +203,18 @@ class PipelineTemplatePipelinePreprocessorSpec extends Specification {
     includeWait || childStageRequisiteRefIds  || expectedStageNames
     true        || ['conditionalWait']        || ['wait', 'conditionalWait', 'childOfConditionalStage']
     false       || ['wait']                   || ['wait', 'childOfConditionalStage']
+  }
+
+  @Unroll
+  def 'trying to render object variables'() {
+    when:
+
+    def template =  createTemplateRequest('small_test.yml')
+    Map<String, Object> result = subject.process(template)
+
+    then:
+    println new JSONObject(result).toString(2)
+
   }
 
   def "should include group for partials-generated stages"() {

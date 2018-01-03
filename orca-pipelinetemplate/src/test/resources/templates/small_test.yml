@@ -1,0 +1,15 @@
+schema: '1'
+
+variables:
+  - name: deploy_config
+    type: object
+    defaultValue:
+      dev:
+        key1_1: value1_1
+        key1_2: value1_2
+
+stages:
+- id: deploy_dev
+  type: deploy
+  config:
+    whatever: "{{ deploy_config['dev']}}"
